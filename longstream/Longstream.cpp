@@ -1,5 +1,5 @@
 #include "llvm/Pass.h"
-#include "llvm/IR/Function.h"
+#include "llvm/IR/Module.h"
 #include "llvm/Support/raw_ostream.h"
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/Transforms/IPO/PassManagerBuilder.h"
@@ -7,25 +7,16 @@
 using namespace llvm;
 
 namespace {
-  struct LongstreamPass : public FunctionPass {
+  struct LongstreamPass : public ModulePass {
     static char ID;
-    LongstreamPass() : FunctionPass(ID) {}
+    LongstreamPass() : ModulePass(ID) {}
 
-    virtual bool runOnFunction(Function &F) {
-      errs() << "I saw a function called " << F.getName() << "!\n";
-      return false;
+    virtual bool runOnModule(Module &m) {
+      errs() << "Holy Crap!!!\n";
+      return true;
     }
   };
 }
 
 char LongstreamPass::ID = 0;
-
-// Automatically enable the pass.
-// http://adriansampson.net/blog/clangpass.html
-static void registerLongstreamPass(const PassManagerBuilder &,
-                         legacy::PassManagerBase &PM) {
-  PM.add(new LongstreamPass());
-}
-static RegisterStandardPasses
-  RegisterMyPass(PassManagerBuilder::EP_EarlyAsPossible,
-                 registerLongstreamPass);
+static RegisterPass<LongstreamPass> X("longstream", "Long Stream Pass", false, false);
