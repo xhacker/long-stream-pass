@@ -1,2 +1,7 @@
 build
 
+add128
+add128.s
+add128-opt
+add128-opt.s
+add128-def.s
